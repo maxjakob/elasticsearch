@@ -219,7 +219,7 @@ type OffsetLimitFacetsFilterQueryParams struct {
 	Offset int            `json:"from"`
 	Limit  int            `json:"size"`
 	Facets FacetSubQuery  `json:"facets,omitempty"`
-	Filter FilterSubQuery `json:"filter,omitempty"`
+	Filter FilterSubQuery `json:"post_filter,omitempty"`
 	Query  SubQuery       `json:"query"`
 }
 
