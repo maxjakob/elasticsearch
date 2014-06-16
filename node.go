@@ -48,15 +48,15 @@ func NewNode(endpoint string, pingTimeout time.Duration) *Node {
 	}
 }
 
-// Ping attempts to HTTP GET a specific endpoint, parse some kind of
-// status indicator, and returns true if everything was successful.
+// Ping attempts to HTTP GET a specific endpoint
+// and returns true if everything was successful.
 func (n *Node) Ping() bool {
 	u, err := url.Parse(n.endpoint)
 	if err != nil {
 		log.Printf("ElasticSearch: ping: resolve: %s", err)
 		return false
 	}
-	u.Path = "/_cluster/nodes/_local" // some arbitrary, reasonable endpoint
+	u.Path = "/" // some arbitrary, reasonable endpoint
 
 	resp, err := n.pingClient.Get(u.String())
 	if err != nil {
@@ -65,17 +65,8 @@ func (n *Node) Ping() bool {
 	}
 	defer resp.Body.Close()
 
-	var status struct {
-		OK bool `json:"ok"`
-	}
-
-	if err = json.NewDecoder(resp.Body).Decode(&status); err != nil {
-		log.Printf("ElasticSearch: ping %s: %s", u.Host, err)
-		return false
-	}
-
-	if !status.OK {
-		log.Printf("ElasticSearch: ping %s: ok=false", u.Host)
+	if resp.StatusCode != 200 {
+		log.Printf("ElasticSearch: ping %s: GET response: %s", u.Host, resp.Status)
 		return false
 	}
 
