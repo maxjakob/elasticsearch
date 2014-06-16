@@ -157,18 +157,27 @@ func BoolQuery(p BoolQueryParams) SubQuery {
 //
 //
 
-// http://www.elasticsearch.org/guide/reference/query-dsl/custom-score-query.html
-type CustomScoreQueryParams struct {
-	Script string                 `json:"script"`
-	Lang   string                 `json:"lang"`
-	Params map[string]interface{} `json:"params"`
-	Query  SubQuery               `json:"query"`
+// http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-function-score-query.html
+type ScriptScoreQueryParams struct {
+	Lang      string
+	Script    string
+	Params    map[string]interface{}
+	Query     SubQuery
+	BoostMode string
 }
 
-func CustomScoreQuery(p CustomScoreQueryParams) SubQuery {
+func ScriptScoreQuery(p ScriptScoreQueryParams) SubQuery {
 	return &Wrapper{
-		Name:    "custom_score",
-		Wrapped: p,
+		Name: "function_score",
+		Wrapped: map[string]interface{}{
+			"script_score": map[string]interface{}{
+				"lang":   p.Lang,
+				"script": p.Script,
+				"params": p.Params,
+			},
+			"query":      p.Query,
+			"boost_mode": p.BoostMode,
+		},
 	}
 }
 
