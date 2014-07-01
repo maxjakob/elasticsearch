@@ -213,6 +213,24 @@ func MatchAllQuery() SubQuery {
 //
 //
 
+// http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-filtered-query.html
+func FilteredQuery(query SubQuery, filter SubQuery) SubQuery {
+	return &Wrapper{
+		Name: "filtered",
+		Wrapped: struct {
+			Query  SubQuery       `json:"query,omitempty"`
+			Filter FilterSubQuery `json:"filter,omitempty"`
+		}{
+			query,
+			filter,
+		},
+	}
+}
+
+//
+//
+//
+
 // Haven't quite figured out how to best represent this.
 // TODO break these up into embeddable query-parts?
 type OffsetLimitFacetsFilterQueryParams struct {
