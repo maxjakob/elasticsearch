@@ -53,7 +53,7 @@ func QueryWrapper(q SubQuery) SubQuery {
 // query types. You generally use them applied to a particular field, ie. scope;
 // see FieldedGenericQuery.
 type GenericQueryParams struct {
-	Query              string  `json:"query,omitempty"`
+	Query              string  `json:"query"`
 	Analyzer           string  `json:"analyzer,omitempty"`
 	Type               string  `json:"type,omitempty"`
 	MaxExpansions      string  `json:"max_expansions,omitempty"`
