@@ -375,17 +375,31 @@ type RangeSubQuery SubQuery
 
 // http://www.elasticsearch.org/guide/reference/query-dsl/range-filter.html
 type RangeFilterParams struct {
-	From         string `json:"from,omitempty"`
-	To           string `json:"to,omitempty"`
-	IncludeLower bool   `json:"include_lower"`
-	IncludeUpper bool   `json:"include_upper"`
+	From         string
+	To           string
+	IncludeLower bool
+	IncludeUpper bool
+	Execution    string
 }
 
 func FieldedRangeSubQuery(field string, p RangeFilterParams) RangeSubQuery {
-	return &Wrapper{
-		Name:    field,
-		Wrapped: p,
+	innerMap := map[string]interface{}{}
+	if p.From != "" {
+		innerMap["from"] = p.From
 	}
+	if p.To != "" {
+		innerMap["to"] = p.To
+	}
+	innerMap["include_lower"] = p.IncludeLower
+	innerMap["include_upper"] = p.IncludeUpper
+
+	outerMap := map[string]interface{}{
+		field: innerMap,
+	}
+	if p.Execution != "" {
+		outerMap["execution"] = p.Execution
+	}
+	return outerMap
 }
 
 func RangeFilter(q RangeSubQuery) FilterSubQuery {
