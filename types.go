@@ -335,6 +335,7 @@ type TermsFilterParams struct {
 	Field     string
 	Values    []string
 	Execution string
+	CacheKey  string
 }
 
 func TermsFilter(p TermsFilterParams) FilterSubQuery {
@@ -343,6 +344,9 @@ func TermsFilter(p TermsFilterParams) FilterSubQuery {
 	}
 	if p.Execution != "" {
 		terms["execution"] = p.Execution
+	}
+	if p.CacheKey != "" {
+		terms["_cache_key"] = p.CacheKey
 	}
 	return map[string]interface{}{
 		"terms": terms,
