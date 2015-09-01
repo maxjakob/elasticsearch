@@ -37,7 +37,7 @@ func NewNode(endpoint string, pingTimeout time.Duration) *Node {
 		health:   Yellow,
 		client: &http.Client{
 			Transport: &http.Transport{
-				MaxIdleConnsPerHost: 250,
+				MaxIdleConnsPerHost: 50,
 			},
 		},
 		pingClient: &http.Client{
